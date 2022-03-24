@@ -1,3 +1,8 @@
+// Ernesto Adame A00825923
+// Javier Domene A01197164
+// Rodrigo Casale A01234245
+// Mariano Shaar A00825287
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine; 
