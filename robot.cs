@@ -61,7 +61,7 @@ public class Robot : MonoBehaviour {
         places.Add(new Vector3(0, 0.25f + 0.1f, 0)); sizes.Add(new Vector3(0.2f, 0.2f, 0.2f)); 
         
         parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        originals.Add(parts[(int)PARTES.HEAN.GetComponent<MeshFilter>().mesh.vertices); 
+        originals.Add(parts[(int)PARTES.HEAD.GetComponent<MeshFilter>().mesh.vertices); 
         places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
     } 
     
