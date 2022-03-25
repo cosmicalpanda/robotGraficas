@@ -50,8 +50,6 @@ public class Robot : MonoBehaviour {
         RHAND,
         LTHIGH,
         RTHIGH,
-        LKNEE,
-        RKNEE,
         LLEG,
         RLEG,
         LFOOT,
@@ -66,20 +64,18 @@ public class Robot : MonoBehaviour {
         {0.4f, 0.4f, 0.4f}, // HEAD
         {0.4f, 0.35f, 0.3f}, // LSHOULDER
         {0.4f, 0.35f, 0.3f}, // RSHOULDER
-        {0.25f, 0.35f, 0.25f}, // LARM
-        {0.25f, 0.35f, 0.25f}, // RARM
+        {0.25f, 0.5f, 0.25f}, // LARM
+        {0.25f, 0.5f, 0.25f}, // RARM
         {0.3f, 0.65f, 0.3f}, // LFOREARM
         {0.3f, 0.65f, 0.3f}, // RFOREARM
-        {0f, 0f, 0f}, // LHAND
-        {0f, 0f, 0f}, // RHAND
-        {0f, 0f, 0f}, // LTHIGH
-        {0f, 0f, 0f}, // RTHIGH
-        {0f, 0f, 0f}, // LKNEE
-        {0f, 0f, 0f}, // RKNEE
-        {0f, 0f, 0f}, // LLEG
-        {0f, 0f, 0f}, // RLEG
-        {0f, 0f, 0f}, // LFOOT
-        {0f, 0f, 0f}, // RFOOT
+        {0.25f, 0.25f, 0.25f}, // LHAND
+        {0.25f, 0.25f, 0.25f}, // RHAND
+        {0.3f, 0.6f, 0.2f}, // LTHIGH
+        {0.3f, 0.6f, 0.2f}, // RTHIGH
+        {0.4f, 0.6f, 0.3f}, // LLEG
+        {0.4f, 0.6f, 0.3f}, // RLEG
+        {0.4f, 0.3f, 0.6f}, // LFOOT
+        {0.4f, 0.3f, 0.6f}, // RFOOT
     };
     
     // Start is called before the first frame update 
@@ -160,50 +156,49 @@ public class Robot : MonoBehaviour {
         places.Add(new Vector3(0, dims[(int)PARTES.RARM, 1] / -2 + dims[(int)PARTES.RFOREARM, 1] / -2, 0)); 
         sizes.Add(new Vector3(dims[(int)PARTES.RFOREARM, 0], dims[(int)PARTES.RFOREARM, 1], dims[(int)PARTES.RFOREARM, 2]));
 
-        // //hands
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.LHAND].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
+        //hands
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.LHAND].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(0, dims[(int)PARTES.LFOREARM, 1] / -2 + dims[(int)PARTES.LHAND, 1] / -2, 0)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.LHAND, 0], dims[(int)PARTES.LHAND, 1], dims[(int)PARTES.LHAND, 2]));
 
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.RHAND].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.RHAND].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(0, dims[(int)PARTES.RFOREARM, 1] / -2 + dims[(int)PARTES.RHAND, 1] / -2, 0)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.RHAND, 0], dims[(int)PARTES.RHAND, 1], dims[(int)PARTES.RHAND, 2]));
         
-        // //thighs
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.LTHIGH].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
+        //thighs
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.LTHIGH].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(0.3f, dims[(int)PARTES.HIPS, 1] / -2 + dims[(int)PARTES.LTHIGH, 1] / -2, 0)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.LTHIGH, 0], dims[(int)PARTES.LTHIGH, 1], dims[(int)PARTES.LTHIGH, 2]));
 
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.RTHIGH].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.RTHIGH].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(-0.3f, dims[(int)PARTES.HIPS, 1] / -2 + dims[(int)PARTES.RTHIGH, 1] / -2, 0)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.RTHIGH, 0], dims[(int)PARTES.RTHIGH, 1], dims[(int)PARTES.RTHIGH, 2]));
+
+        //legs
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.LLEG].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(0, dims[(int)PARTES.LTHIGH, 1] / -2 + dims[(int)PARTES.LLEG, 1] / -2, 0)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.LLEG, 0], dims[(int)PARTES.LLEG, 1], dims[(int)PARTES.LLEG, 2]));
         
-        // //knees *creo que no es necesario
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.LKNEE].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.RLEG].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(0, dims[(int)PARTES.RTHIGH, 1] / -2 + dims[(int)PARTES.RLEG, 1] / -2, 0)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.RLEG, 0], dims[(int)PARTES.RLEG, 1], dims[(int)PARTES.RLEG, 2]));
 
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.RKNEE].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
-        
-        // //legs
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.LLEG].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
+        //feet
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.LFOOT].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(0, dims[(int)PARTES.LLEG, 1] / -2 + dims[(int)PARTES.LFOOT, 1] / -2, -.15f)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.LFOOT, 0], dims[(int)PARTES.LFOOT, 1], dims[(int)PARTES.LFOOT, 2]));
 
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.RLEG].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
-        
-        // //feet
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.LFOOT].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
-
-        // parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
-        // originals.Add(parts[(int)PARTES.RFOOT].GetComponent<MeshFilter>().mesh.vertices); 
-        // places.Add(new Vector3(0, 0.1f + 0.25f, 0)); sizes.Add(new Vector3(0.5f, 0.5f, 0.5f)); 
+        parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
+        originals.Add(parts[(int)PARTES.RFOOT].GetComponent<MeshFilter>().mesh.vertices); 
+        places.Add(new Vector3(0, dims[(int)PARTES.RLEG, 1] / -2 + dims[(int)PARTES.RFOOT, 1] / -2, -.15f)); 
+        sizes.Add(new Vector3(dims[(int)PARTES.RFOOT, 0], dims[(int)PARTES.RFOOT, 1], dims[(int)PARTES.RFOOT, 2]));
    
     } 
     
@@ -217,15 +212,17 @@ public class Robot : MonoBehaviour {
         
         List<Matrix4x4> matrices = new List<Matrix4x4>(); 
         
-        //trunk
+        //hip
         Matrix4x4 tHips = Transformations.TranslateM(places[(int)PARTES.HIPS].x, places[(int)PARTES.HIPS].y, places[(int)PARTES.HIPS].z); 
         Matrix4x4 sHips = Transformations.ScaleM(sizes[(int)PARTES.HIPS].x, sizes[(int)PARTES.HIPS].y, sizes[(int)PARTES.HIPS].z); 
         matrices.Add(tHips * sHips); 
         
+        //abs
         Matrix4x4 tAbs = Transformations.TranslateM(places[(int)PARTES.ABDOMEN].x, places[(int)PARTES.ABDOMEN].y, places[(int)PARTES.ABDOMEN].z); 
         Matrix4x4 sAbs = Transformations.ScaleM(sizes[(int)PARTES.ABDOMEN].x, sizes[(int)PARTES.ABDOMEN].y, sizes[(int)PARTES.ABDOMEN].z); 
         matrices.Add(tHips * tAbs * sAbs); 
         
+        //chest
         Matrix4x4 rChest = Transformations.RotateM(rotY, Transformations.AXIS.AX_Y); 
         Matrix4x4 tChest = Transformations.TranslateM(places[(int)PARTES.CHEST].x, places[(int)PARTES.CHEST].y, places[(int)PARTES.CHEST].z); 
         Matrix4x4 sChest = Transformations.ScaleM(sizes[(int)PARTES.CHEST].x, sizes[(int)PARTES.CHEST].y, sizes[(int)PARTES.CHEST].z); 
@@ -270,14 +267,41 @@ public class Robot : MonoBehaviour {
         matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * tRARM * tRfArm * sRfArm);      
 
         //hands
+        Matrix4x4 tLHand = Transformations.TranslateM(places[(int)PARTES.LHAND].x, places[(int)PARTES.LHAND].y, places[(int)PARTES.LHAND].z); 
+        Matrix4x4 sLHand = Transformations.ScaleM(sizes[(int)PARTES.LHAND].x, sizes[(int)PARTES.LHAND].y, sizes[(int)PARTES.LHAND].z); 
+        matrices.Add(tHips * tAbs * rChest * tChest * rLShoulder * tLShoulder * tLARM * tLfArm * tLHand * sLHand);  
         
+        Matrix4x4 tRHand = Transformations.TranslateM(places[(int)PARTES.RHAND].x, places[(int)PARTES.RHAND].y, places[(int)PARTES.RHAND].z); 
+        Matrix4x4 sRHand = Transformations.ScaleM(sizes[(int)PARTES.RHAND].x, sizes[(int)PARTES.RHAND].y, sizes[(int)PARTES.RHAND].z); 
+        matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * tRARM * tRfArm * tRHand * sRHand );     
+
         //thighs
+        Matrix4x4 rLThigh = Transformations.RotateM(rotX, Transformations.AXIS.AX_X); 
+        Matrix4x4 tLThigh = Transformations.TranslateM(places[(int)PARTES.LTHIGH].x, places[(int)PARTES.LTHIGH].y, places[(int)PARTES.LTHIGH].z); 
+        Matrix4x4 sLThigh = Transformations.ScaleM(sizes[(int)PARTES.LTHIGH].x, sizes[(int)PARTES.LTHIGH].y, sizes[(int)PARTES.LTHIGH].z); 
+        matrices.Add(tHips * rLThigh * tLThigh * sLThigh); 
 
-        //knees *no se necesita
-
+        Matrix4x4 tRThigh = Transformations.TranslateM(places[(int)PARTES.RTHIGH].x, places[(int)PARTES.RTHIGH].y, places[(int)PARTES.RTHIGH].z); 
+        Matrix4x4 sRThigh = Transformations.ScaleM(sizes[(int)PARTES.RTHIGH].x, sizes[(int)PARTES.RTHIGH].y, sizes[(int)PARTES.RTHIGH].z); 
+        matrices.Add(tHips * tRThigh * sRThigh); 
+       
         //legs
+        Matrix4x4 tLLEG = Transformations.TranslateM(places[(int)PARTES.LLEG].x, places[(int)PARTES.LLEG].y, places[(int)PARTES.LLEG].z); 
+        Matrix4x4 sLLEG = Transformations.ScaleM(sizes[(int)PARTES.LLEG].x, sizes[(int)PARTES.LLEG].y, sizes[(int)PARTES.LLEG].z); 
+        matrices.Add(tHips * rLThigh * tLThigh * tLLEG * sLLEG); 
+
+        Matrix4x4 tRLEG = Transformations.TranslateM(places[(int)PARTES.RLEG].x, places[(int)PARTES.RLEG].y, places[(int)PARTES.RLEG].z); 
+        Matrix4x4 sRLEG = Transformations.ScaleM(sizes[(int)PARTES.RLEG].x, sizes[(int)PARTES.RLEG].y, sizes[(int)PARTES.RLEG].z); 
+        matrices.Add(tHips * tRThigh * tRLEG * sRLEG); 
 
         //feet
+        Matrix4x4 tLFoot = Transformations.TranslateM(places[(int)PARTES.LFOOT].x, places[(int)PARTES.LFOOT].y, places[(int)PARTES.LFOOT].z); 
+        Matrix4x4 sLFoot = Transformations.ScaleM(sizes[(int)PARTES.LFOOT].x, sizes[(int)PARTES.LFOOT].y, sizes[(int)PARTES.LFOOT].z); 
+        matrices.Add(tHips * rLThigh * tLThigh * tLLEG * tLFoot * sLFoot); 
+
+        Matrix4x4 tRFoot = Transformations.TranslateM(places[(int)PARTES.LFOOT].x, places[(int)PARTES.LFOOT].y, places[(int)PARTES.LFOOT].z); 
+        Matrix4x4 sRFoot = Transformations.ScaleM(sizes[(int)PARTES.LFOOT].x, sizes[(int)PARTES.LFOOT].y, sizes[(int)PARTES.LFOOT].z); 
+        matrices.Add(tHips * tRThigh * tLLEG * tLFoot * sLFoot); 
 
         for(int i = 0; i < matrices.Count; i++) { 
             parts[i].GetComponent<MeshFilter>().mesh.vertices = ApplyTransform(matrices[i], originals[i]);
