@@ -25,14 +25,16 @@ public class Robot : MonoBehaviour {
     List<Vector3[]> originals; 
     List<Vector3> places; 
     List<Vector3> sizes; 
-    
-    float rotY; 
-    float dirY; 
-    float deltaY; 
 
-    float rotX; 
-    float dirX; 
-    float deltaX; 
+    float trHips, deltaHips;
+    float rotChest, dirChest, deltaChest;
+    float rotShoulder, dirShoulder, deltaShoulder;
+    float rotFArm, trFArm;
+    float rotHand;
+    float rotLThigh, dirLThigh, deltaLThigh;
+    float rotRThigh, dirRThigh, deltaRThigh;
+    float rotLFoot, dirLFoot, deltaLFoot;
+    float rotRFoot, dirRFoot, deltaRFoot;
     
     enum PARTES { 
         HIPS, 
@@ -64,10 +66,10 @@ public class Robot : MonoBehaviour {
         {0.4f, 0.4f, 0.4f}, // HEAD
         {0.4f, 0.35f, 0.3f}, // LSHOULDER
         {0.4f, 0.35f, 0.3f}, // RSHOULDER
-        {0.25f, 0.5f, 0.25f}, // LARM
-        {0.25f, 0.5f, 0.25f}, // RARM
-        {0.3f, 0.65f, 0.3f}, // LFOREARM
-        {0.3f, 0.65f, 0.3f}, // RFOREARM
+        {0.25f, 0.4f, 0.25f}, // LARM
+        {0.25f, 0.4f, 0.25f}, // RARM
+        {0.3f, 0.6f, 0.3f}, // LFOREARM
+        {0.3f, 0.6f, 0.3f}, // RFOREARM
         {0.25f, 0.25f, 0.25f}, // LHAND
         {0.25f, 0.25f, 0.25f}, // RHAND
         {0.3f, 0.6f, 0.2f}, // LTHIGH
@@ -77,16 +79,60 @@ public class Robot : MonoBehaviour {
         {0.4f, 0.3f, 0.6f}, // LFOOT
         {0.4f, 0.3f, 0.6f}, // RFOOT
     };
+
+    Color[] colors = {
+        Color.grey,
+        Color.white,
+        Color.red,
+        Color.blue,
+    };
+
+    int[] partColors = {
+        0, // HIPS
+        1, // ABS
+        2, // CHEST
+        1, // NECK
+        3, // HEAD
+        2, // LSHOULDER
+        2, // RSHOULDER
+        1, // LARM
+        1, // RARM
+        2, // LFOREARM
+        2, // RFOREARM
+        3, // LHAND
+        3, // RHAND
+        1, // LTHIGH
+        1, // RTHIGH
+        3, // LLEG
+        3, // RLEG
+        3, // LFOOT
+        3, // RFOOT
+    };
     
     // Start is called before the first frame update 
     void Start() { 
-        rotY = 0; 
-        dirY = 1; 
-        deltaY = 0.2f; 
-
-        rotX = 0; 
-        dirX = 1; 
-        deltaX = 0.4f; 
+        trHips = 0; 
+        deltaHips = 0.0025f;  
+        
+        rotChest = 0;
+        dirChest = 1;
+        deltaChest = 0.125f;
+        
+        rotShoulder = 0;
+        dirShoulder = 1;
+        deltaShoulder = 0.125f;
+        
+        rotFArm = 20f; 
+        trFArm = 0.1f;
+        rotHand = 6f;
+        
+        rotLThigh = 0;
+        deltaLThigh = 0.5f;
+        dirLThigh = 1;
+        
+        rotRThigh = 0;
+        deltaRThigh = 0.5f;
+        dirRThigh = -1;
         
         parts = new List<GameObject>(); 
         originals = new List<Vector3[]>(); 
@@ -148,12 +194,12 @@ public class Robot : MonoBehaviour {
         //forearms
         parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
         originals.Add(parts[(int)PARTES.LFOREARM].GetComponent<MeshFilter>().mesh.vertices); 
-        places.Add(new Vector3(0, dims[(int)PARTES.LARM, 1] / -2 + dims[(int)PARTES.LFOREARM, 1] / -2, 0)); 
+        places.Add(new Vector3(0, trFArm + dims[(int)PARTES.LARM, 1] / -2 + dims[(int)PARTES.LFOREARM, 1] / -2, trFArm)); 
         sizes.Add(new Vector3(dims[(int)PARTES.LFOREARM, 0], dims[(int)PARTES.LFOREARM, 1], dims[(int)PARTES.LFOREARM, 2]));
 
         parts.Add(GameObject.CreatePrimitive(PrimitiveType.Cube)); 
         originals.Add(parts[(int)PARTES.RFOREARM].GetComponent<MeshFilter>().mesh.vertices); 
-        places.Add(new Vector3(0, dims[(int)PARTES.RARM, 1] / -2 + dims[(int)PARTES.RFOREARM, 1] / -2, 0)); 
+        places.Add(new Vector3(0, trFArm + dims[(int)PARTES.RARM, 1] / -2 + dims[(int)PARTES.RFOREARM, 1] / -2, trFArm)); 
         sizes.Add(new Vector3(dims[(int)PARTES.RFOREARM, 0], dims[(int)PARTES.RFOREARM, 1], dims[(int)PARTES.RFOREARM, 2]));
 
         //hands
@@ -199,21 +245,45 @@ public class Robot : MonoBehaviour {
         originals.Add(parts[(int)PARTES.RFOOT].GetComponent<MeshFilter>().mesh.vertices); 
         places.Add(new Vector3(0, dims[(int)PARTES.RLEG, 1] / -2 + dims[(int)PARTES.RFOOT, 1] / -2, -.15f)); 
         sizes.Add(new Vector3(dims[(int)PARTES.RFOOT, 0], dims[(int)PARTES.RFOOT, 1], dims[(int)PARTES.RFOOT, 2]));
-   
+
+        for (int i = 0; i < parts.Count; i++) {
+            parts[i].GetComponent<Renderer>().material.SetColor("_Color", colors[partColors[i]]);
+        }
     } 
     
     // Update is called once per frame 
     void Update() { 
-        rotY += dirY * deltaY; // rotY =0, dirY =1, deltaY =0.2f; 
-        if (rotY < -10 || rotY > 10) dirY = -dirY; 
+        trHips += deltaHips;
+        if (trHips < -0.12f || trHips > 0) deltaHips = -deltaHips;
 
-        rotX += dirX * deltaX; // rotX =0, dirX =1, deltaX =0.2f; 
-        if (rotX < -20 || rotX > 20) dirX = -dirX; 
+        rotChest += deltaChest * dirChest;
+        if (rotChest < -6f || rotChest > 6f) dirChest = -dirChest; 
+
+        rotShoulder += deltaShoulder * dirShoulder;
+        if (rotShoulder < -6f || rotShoulder > 6f) dirShoulder = -dirShoulder; 
+
+        rotLThigh += deltaLThigh * dirLThigh;
+        if (rotLThigh < -24f) {
+            // deltaLThigh = 0.75f;
+            dirLThigh = 1;
+        } else if (rotLThigh > 24f) {
+            // deltaLThigh = 0.375f;
+            dirLThigh = -1;
+        }
+
+        rotRThigh += deltaRThigh * dirRThigh;
+        if (rotRThigh < -24f) {
+            // deltaRThigh = 0.75f;
+            dirRThigh = 1;
+        } else if (rotRThigh > 24f) {
+            // deltaRThigh = 0.375f;
+            dirRThigh = -1;
+        }
         
         List<Matrix4x4> matrices = new List<Matrix4x4>(); 
         
         //hip
-        Matrix4x4 tHips = Transformations.TranslateM(places[(int)PARTES.HIPS].x, places[(int)PARTES.HIPS].y, places[(int)PARTES.HIPS].z); 
+        Matrix4x4 tHips = Transformations.TranslateM(places[(int)PARTES.HIPS].x, places[(int)PARTES.HIPS].y + trHips, places[(int)PARTES.HIPS].z); 
         Matrix4x4 sHips = Transformations.ScaleM(sizes[(int)PARTES.HIPS].x, sizes[(int)PARTES.HIPS].y, sizes[(int)PARTES.HIPS].z); 
         matrices.Add(tHips * sHips); 
         
@@ -223,27 +293,28 @@ public class Robot : MonoBehaviour {
         matrices.Add(tHips * tAbs * sAbs); 
         
         //chest
-        Matrix4x4 rChest = Transformations.RotateM(rotY, Transformations.AXIS.AX_Y); 
+        Matrix4x4 rChest = Transformations.RotateM(rotChest, Transformations.AXIS.AX_Y); 
         Matrix4x4 tChest = Transformations.TranslateM(places[(int)PARTES.CHEST].x, places[(int)PARTES.CHEST].y, places[(int)PARTES.CHEST].z); 
         Matrix4x4 sChest = Transformations.ScaleM(sizes[(int)PARTES.CHEST].x, sizes[(int)PARTES.CHEST].y, sizes[(int)PARTES.CHEST].z); 
         matrices.Add(tHips * tAbs * rChest * tChest * sChest); 
         
         //head and neck
+        Matrix4x4 rNeck = Transformations.RotateM(-rotChest, Transformations.AXIS.AX_Y);
         Matrix4x4 tNeck = Transformations.TranslateM(places[(int)PARTES.NECK].x, places[(int)PARTES.NECK].y, places[(int)PARTES.NECK].z); 
         Matrix4x4 sNeck = Transformations.ScaleM(sizes[(int)PARTES.NECK].x, sizes[(int)PARTES.NECK].y, sizes[(int)PARTES.NECK].z); 
-        matrices.Add(tHips * tAbs * rChest * tChest * tNeck * sNeck); 
+        matrices.Add(tHips * tAbs * rChest * tChest * rNeck * tNeck * sNeck); 
         
         Matrix4x4 tHead = Transformations.TranslateM(places[(int)PARTES.HEAD].x, places[(int)PARTES.HEAD].y, places[(int)PARTES.HEAD].z); 
         Matrix4x4 sHead = Transformations.ScaleM(sizes[(int)PARTES.HEAD].x, sizes[(int)PARTES.HEAD].y, sizes[(int)PARTES.HEAD].z); 
-        matrices.Add(tHips * tAbs * rChest * tChest * tNeck * tHead * sHead); 
+        matrices.Add(tHips * tAbs * rChest * tChest * rNeck * tNeck * tHead * sHead); 
 
         //shoulders
-        Matrix4x4 rLShoulder = Transformations.RotateM(rotX, Transformations.AXIS.AX_X); 
+        Matrix4x4 rLShoulder = Transformations.RotateM(rotShoulder, Transformations.AXIS.AX_X); 
         Matrix4x4 tLShoulder = Transformations.TranslateM(places[(int)PARTES.LSHOULDER].x, places[(int)PARTES.LSHOULDER].y, places[(int)PARTES.LSHOULDER].z); 
         Matrix4x4 sLShoulder = Transformations.ScaleM(sizes[(int)PARTES.LSHOULDER].x, sizes[(int)PARTES.LSHOULDER].y, sizes[(int)PARTES.LSHOULDER].z); 
         matrices.Add(tHips * tAbs * rChest * tChest * rLShoulder * tLShoulder * sLShoulder); 
 
-        Matrix4x4 rRShoulder = Transformations.RotateM(-rotX, Transformations.AXIS.AX_X); 
+        Matrix4x4 rRShoulder = Transformations.RotateM(-rotShoulder, Transformations.AXIS.AX_X); 
         Matrix4x4 tRShoulder = Transformations.TranslateM(places[(int)PARTES.RSHOULDER].x, places[(int)PARTES.RSHOULDER].y, places[(int)PARTES.RSHOULDER].z); 
         Matrix4x4 sRShoulder = Transformations.ScaleM(sizes[(int)PARTES.RSHOULDER].x, sizes[(int)PARTES.RSHOULDER].y, sizes[(int)PARTES.RSHOULDER].z); 
         matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * sRShoulder); 
@@ -258,32 +329,37 @@ public class Robot : MonoBehaviour {
         matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * tRARM * sRARM);      
 
         //forearms
+        Matrix4x4 rLFArm = Transformations.RotateM(rotFArm, Transformations.AXIS.AX_X);
         Matrix4x4 tLfArm = Transformations.TranslateM(places[(int)PARTES.LFOREARM].x, places[(int)PARTES.LFOREARM].y, places[(int)PARTES.LFOREARM].z); 
         Matrix4x4 sLfArm = Transformations.ScaleM(sizes[(int)PARTES.LFOREARM].x, sizes[(int)PARTES.LFOREARM].y, sizes[(int)PARTES.LFOREARM].z); 
-        matrices.Add(tHips * tAbs * rChest * tChest * rLShoulder * tLShoulder * tLARM * tLfArm * sLfArm);      
+        matrices.Add(tHips * tAbs * rChest * tChest * rLShoulder * tLShoulder * tLARM * rLFArm * tLfArm * sLfArm);      
 
+        Matrix4x4 rRFArm = Transformations.RotateM(rotFArm, Transformations.AXIS.AX_X);
         Matrix4x4 tRfArm = Transformations.TranslateM(places[(int)PARTES.LFOREARM].x, places[(int)PARTES.LFOREARM].y, places[(int)PARTES.LFOREARM].z); 
         Matrix4x4 sRfArm = Transformations.ScaleM(sizes[(int)PARTES.LFOREARM].x, sizes[(int)PARTES.LFOREARM].y, sizes[(int)PARTES.LFOREARM].z); 
-        matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * tRARM * tRfArm * sRfArm);      
+        matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * tRARM * rRFArm * tRfArm * sRfArm);      
 
         //hands
+        Matrix4x4 rLHand = Transformations.RotateM(-rotHand, Transformations.AXIS.AX_Z);
         Matrix4x4 tLHand = Transformations.TranslateM(places[(int)PARTES.LHAND].x, places[(int)PARTES.LHAND].y, places[(int)PARTES.LHAND].z); 
         Matrix4x4 sLHand = Transformations.ScaleM(sizes[(int)PARTES.LHAND].x, sizes[(int)PARTES.LHAND].y, sizes[(int)PARTES.LHAND].z); 
-        matrices.Add(tHips * tAbs * rChest * tChest * rLShoulder * tLShoulder * tLARM * tLfArm * tLHand * sLHand);  
+        matrices.Add(tHips * tAbs * rChest * tChest * rLShoulder * tLShoulder * tLARM * rLFArm * tLfArm * rLHand * tLHand * sLHand);  
         
+        Matrix4x4 rRHand = Transformations.RotateM(rotHand, Transformations.AXIS.AX_Z);
         Matrix4x4 tRHand = Transformations.TranslateM(places[(int)PARTES.RHAND].x, places[(int)PARTES.RHAND].y, places[(int)PARTES.RHAND].z); 
         Matrix4x4 sRHand = Transformations.ScaleM(sizes[(int)PARTES.RHAND].x, sizes[(int)PARTES.RHAND].y, sizes[(int)PARTES.RHAND].z); 
-        matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * tRARM * tRfArm * tRHand * sRHand );     
+        matrices.Add(tHips * tAbs * rChest * tChest * rRShoulder * tRShoulder * tRARM * rRFArm * tRfArm * rRHand * tRHand * sRHand);     
 
-        //thighs
-        Matrix4x4 rLThigh = Transformations.RotateM(rotX, Transformations.AXIS.AX_X); 
+        //thighs 
+        Matrix4x4 rLThigh = Transformations.RotateM(rotLThigh, Transformations.AXIS.AX_X);
         Matrix4x4 tLThigh = Transformations.TranslateM(places[(int)PARTES.LTHIGH].x, places[(int)PARTES.LTHIGH].y, places[(int)PARTES.LTHIGH].z); 
         Matrix4x4 sLThigh = Transformations.ScaleM(sizes[(int)PARTES.LTHIGH].x, sizes[(int)PARTES.LTHIGH].y, sizes[(int)PARTES.LTHIGH].z); 
         matrices.Add(tHips * rLThigh * tLThigh * sLThigh); 
 
+        Matrix4x4 rRThigh = Transformations.RotateM(rotRThigh, Transformations.AXIS.AX_X);
         Matrix4x4 tRThigh = Transformations.TranslateM(places[(int)PARTES.RTHIGH].x, places[(int)PARTES.RTHIGH].y, places[(int)PARTES.RTHIGH].z); 
         Matrix4x4 sRThigh = Transformations.ScaleM(sizes[(int)PARTES.RTHIGH].x, sizes[(int)PARTES.RTHIGH].y, sizes[(int)PARTES.RTHIGH].z); 
-        matrices.Add(tHips * tRThigh * sRThigh); 
+        matrices.Add(tHips * rRThigh * tRThigh * sRThigh); 
        
         //legs
         Matrix4x4 tLLEG = Transformations.TranslateM(places[(int)PARTES.LLEG].x, places[(int)PARTES.LLEG].y, places[(int)PARTES.LLEG].z); 
@@ -292,7 +368,7 @@ public class Robot : MonoBehaviour {
 
         Matrix4x4 tRLEG = Transformations.TranslateM(places[(int)PARTES.RLEG].x, places[(int)PARTES.RLEG].y, places[(int)PARTES.RLEG].z); 
         Matrix4x4 sRLEG = Transformations.ScaleM(sizes[(int)PARTES.RLEG].x, sizes[(int)PARTES.RLEG].y, sizes[(int)PARTES.RLEG].z); 
-        matrices.Add(tHips * tRThigh * tRLEG * sRLEG); 
+        matrices.Add(tHips  * rRThigh* tRThigh * tRLEG * sRLEG); 
 
         //feet
         Matrix4x4 tLFoot = Transformations.TranslateM(places[(int)PARTES.LFOOT].x, places[(int)PARTES.LFOOT].y, places[(int)PARTES.LFOOT].z); 
@@ -301,7 +377,7 @@ public class Robot : MonoBehaviour {
 
         Matrix4x4 tRFoot = Transformations.TranslateM(places[(int)PARTES.LFOOT].x, places[(int)PARTES.LFOOT].y, places[(int)PARTES.LFOOT].z); 
         Matrix4x4 sRFoot = Transformations.ScaleM(sizes[(int)PARTES.LFOOT].x, sizes[(int)PARTES.LFOOT].y, sizes[(int)PARTES.LFOOT].z); 
-        matrices.Add(tHips * tRThigh * tLLEG * tLFoot * sLFoot); 
+        matrices.Add(tHips * rRThigh * tRThigh * tLLEG * tLFoot * sLFoot); 
 
         for(int i = 0; i < matrices.Count; i++) { 
             parts[i].GetComponent<MeshFilter>().mesh.vertices = ApplyTransform(matrices[i], originals[i]);
